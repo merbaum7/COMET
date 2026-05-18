@@ -1,0 +1,7 @@
+[submodule "src/mii"]
+	path = src/mii
+	url = git@github.com:merbaum7/Scale-MII.git
+	branch = for-spin
+[submodule "src/axi"]
+	path = src/axi
+	url = git@github.com:merbaum7/axi_interface.git
