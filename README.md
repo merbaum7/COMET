@@ -13,6 +13,7 @@ It works on any FPGA boards which has Ethernet phy(phy chip or FPGA Implemented 
 * [Publications](#publications)
 * [License](#license)
 * [FAQ](#faq)
+* [Revision History](#revison-history)
 
 Overview
 ==============================
@@ -34,7 +35,13 @@ Under construction
 Publications
 ==============================
 
-Comming soon.
+* Keisuke Takano,
+  "RDMA and PR mechanism for Middle Scale FPGA clusters",
+  Janualy 2026. IEICE Conferences Archives, In: Technical Committee on Reconfigurable Systems (RECONF) in 2026/1.
+* Keisuke Takano,
+  "Concept of Heterogeneous PC-FPGA hybrid system",
+  August 2025. IEICE Conferences Archives, In: Summer United Workshops on Parallel, Distributed and Cooperative Processing 2025.
+  
 
 
 License
