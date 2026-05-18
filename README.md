@@ -1,9 +1,11 @@
-![COMET](logo/COMET_logo1.png)
+<!-- ![COMET](logo/COMET_logo1.png) -->
+<div align="center">
+    <img src="logo/COMET_logo1.png" width="80%" alt="COMET">
+</div>
 
 # COMET: Configurable Over Multi-rate Ethernet Transceiver
 
-COMET is an open-source implementation of MII(Media Independent Interface) Transceiver.
-
+COMET is an open-source implementation of MII(Media Independent Interface) Transceiver.  
 It works on any FPGA boards which has Ethernet phy(phy chip or FPGA Implemented IP).
 
 
