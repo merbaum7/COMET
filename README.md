@@ -350,8 +350,8 @@ Revison History
 ==============================
 
 You can find the releases in https://github.com/merbaum7/COMET 
-- 0.99.0 (May.15, 2026): The initial release.
-- 0.99.1 (May.18, 2026): The initial implement of Internal port disable version.
+- 0.99.0 (May.15, 2026): The initial release.  
+- 0.99.1 (May.18, 2026): The initial implement of Internal port disable version.  
 - 0.99.2 (May.20, 2026): Valid Input instruction port (From FPGA Logic).  
   [Address Width is FIXED 32bit]  
-
+- 0.99.3 (Jun.19, 2026): Fixed Send/Recv data size definition.  
