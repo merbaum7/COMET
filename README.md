@@ -355,3 +355,5 @@ You can find the releases in https://github.com/merbaum7/COMET
 - 0.99.2 (May.20, 2026): Valid Input instruction port (From FPGA Logic).  
   [Address Width is FIXED 32bit]  
 - 0.99.3 (Jun.19, 2026): Fixed Send/Recv data size definition.  
+- 0.99.4 (Jul.18, 2026): Fixed Existing Partially Synchronous Reset to Asynchronous Reset.  
+

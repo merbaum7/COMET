@@ -90,7 +90,7 @@ module instruction_controller #(
 
 	reg 	[2:0]		r_state;		// instruction exec state
 	reg		[1:0]		r_ri_count;		// receiver instruction exec counter
-	always @(posedge clk) begin
+	always @(posedge clk or posedge rst) begin
 		if (rst) begin
 			r_state		<=	WAIT;
 			r_ri_count	<=	2'h0;

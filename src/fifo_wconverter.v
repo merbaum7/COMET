@@ -60,7 +60,7 @@ module fifo_Width_Converter #(
 			reg	[OWIDTH-1:0]	r_wdata;
 			reg	[IWIDTH-1:0]	r_tmpwdata;
 			reg					r_wen;
-			always @(posedge clk) begin
+			always @(posedge clk or posedge rst) begin
 				if (rst) begin
 					r_ocount		<=	0;
 					r_wdata			<=	0;

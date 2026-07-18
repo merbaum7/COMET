@@ -227,7 +227,7 @@ module receive2AXI #(
 		.rclk			(M_ACLK),
 		.rst			(rst),
 
-		.afull			(buf_full),
+		.afull			(),
 		.emp			(w_emp),
 
 		.din_en			(w_axififo_wen),
@@ -281,14 +281,6 @@ module receive2AXI #(
 		.inst_daddr			(inst_daddr),
 		.inst_opts			(inst_opts)
 	);
-
-	// to sender module (parameters)
-	assign src_mac	= w_buf_src_mac;
-	assign dst_mac	= own_mac;
-	assign ptype	= w_buf_ptype;
-	assign fport	= w_buf_fport;
-	assign dsize	= w_buf_dsize;
-	assign daddr	= w_buf_daddr;
 
 	axi_m_write #(
 		.MAX_BURST_LEN		(256),
