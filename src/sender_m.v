@@ -44,7 +44,7 @@ module send_decoder (
 	assign fport	= 	{4'h0,i_port};
 	assign dsize	= 	i_size;
 	assign daddr	= 	i_daddr;
-	assign opts		= 	(ptype == DATAFRAME) ? i_opts : 32'h0;
+	assign opts		= 	(ptype == DATAFRAME) ? 32'h0 : i_opts;
 endmodule
 
 module AXI2send #(

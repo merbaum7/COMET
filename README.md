@@ -356,4 +356,5 @@ You can find the releases in https://github.com/merbaum7/COMET
   [Address Width is FIXED 32bit]  
 - 0.99.3 (Jun.19, 2026): Fixed Send/Recv data size definition.  
 - 0.99.4 (Jul.18, 2026): Fixed Existing Partially Synchronous Reset to Asynchronous Reset.  
+- 0.99.5 (Aug.25, 2026): Fixed option parameter multiplexer in Sender Module.  
 
