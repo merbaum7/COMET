@@ -26,27 +26,23 @@ module send_decoder (
 	output	[31:0]		daddr,
 	output	[31:0]		opts
 );
-	parameter	REGREQ		=	16'h0101,
-				DATAFRAME	=	16'h0110,
-				DATAREQ		=	16'h0111,
+	parameter	REQ		=	16'h88B5,
+				DATA	=	16'h88B6;
 
-				INIT_RESET	=	16'h01FF;
-
-	assign read_start		= (ptype == DATAFRAME);
+	assign read_start		= (ptype == DATA);
 	assign read_address		= i_opts;
-	assign read_size		= (ptype == DATAFRAME) ? 
+	assign read_size		= (ptype == DATA) ? 
 								((dsize == 0) ? 32'd4 : ({24'h0, dsize} + 1) << 5)
 						        : 32'd0;
 
 	assign dst_mac	=	i_mac;
-	assign ptype	=	i_ops == 4'h1 ? DATAFRAME :
-						i_ops == 4'h2 ? DATAREQ :
-						i_ops == 4'h3 ? REGREQ :
+	assign ptype	=	i_ops == 4'h1 ? DATA :
+						i_ops == 4'h2 ? REQ :
 						16'h0;
 	assign fport	= 	{4'h0,i_port};
 	assign dsize	= 	i_size;
 	assign daddr	= 	i_daddr;
-	assign opts		= 	(ptype == DATAFRAME) ? 32'h0 : i_opts;
+	assign opts		= 	(ptype == DATA) ? 32'h0 : i_opts;
 endmodule
 
 module AXI2send #(

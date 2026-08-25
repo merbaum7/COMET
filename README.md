@@ -358,4 +358,5 @@ You can find the releases in https://github.com/merbaum7/COMET
 - 0.99.4 (Jul.18, 2026): Fixed Existing Partially Synchronous Reset to Asynchronous Reset.  
 - 0.99.5 (Aug.25, 2026): Fixed option parameter multiplexer in Sender Module.  
 - 0.99.6 (Aug.25, 2026): Fixed AXI read/write size (in header decoding).  
+- 0.99.7 (Aug.25, 2026): Re-defined using ether type.  
 

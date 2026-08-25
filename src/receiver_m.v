@@ -24,31 +24,27 @@ module receive_decoder (
 	output	[31:0]		inst_daddr,
 	output	[31:0]		inst_opts
 );
-	parameter	REGREQ		=	16'h0101,
-				DATAFRAME	=	16'h0110,
-				DATAREQ		=	16'h0111,
-
-				INIT_RESET	=	16'h01FF,
+	parameter	REQ		=	16'h88B5,
+				DATA	=	16'h88B6,
 				
 				FLOWCTRL	=	16'h8808;
 
-	assign write_start		= (ptype == DATAFRAME);
+	assign write_start		= (ptype == DATA);
 	assign write_address	= daddr;
-	assign write_size		= (ptype == DATAFRAME) ? 
+	assign write_size		= (ptype == DATA) ? 
 								((dsize == 0) ? 32'd4 : ({24'h0, dsize} + 1) << 5)
         						: 32'd0;
 
 	// Soft reset/buf pop signal
 	reg		soft_reset_r;
 	assign	soft_reset	= soft_reset_r;
-	assign	inst_pop	= (ptype == DATAREQ) || (ptype == REGREQ);
+	assign	inst_pop	= (ptype == REQ);
 	always @(posedge clk) begin
-		soft_reset_r	<=	ptype == INIT_RESET;
+		soft_reset_r	<=	(ptype == REQ && fport == 8'hFF);
 	end
 
 	// to sender module (parameters)
-	assign inst_ops		= 	ptype == DATAREQ	? 4'h2	:	// REGREQ 
-							ptype == REGREQ		? 4'h3	:	// DATAREQ
+	assign inst_ops		= 	ptype == REQ	? 4'h2	:	// REQ 
 							4'h0;
 	assign inst_mac		= src_mac;
 	assign inst_port	= fport[3:0];
@@ -193,8 +189,8 @@ module receive2AXI #(
 
 		.head_end			(w_head),
 
-		.read_deny_type1	(16'h0101),	// REGREQ : 0101
-		.read_deny_type2	(16'h0111),	// DATAREQ: 0111
+		.read_deny_type1	(16'h88B5),	// REQ : 88B5
+		.read_deny_type2	(16'h0000),
 		.read_deny_type3	(16'h0000)
 	);
 
