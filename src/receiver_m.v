@@ -34,7 +34,9 @@ module receive_decoder (
 
 	assign write_start		= (ptype == DATAFRAME);
 	assign write_address	= daddr;
-	assign write_size		= (ptype == DATAFRAME) ? ({24'h0,dsize}+1) << 5 : 32'h0;
+	assign write_size		= (ptype == DATAFRAME) ? 
+								((dsize == 0) ? 32'd4 : ({24'h0, dsize} + 1) << 5)
+        						: 32'd0;
 
 	// Soft reset/buf pop signal
 	reg		soft_reset_r;

@@ -34,7 +34,9 @@ module send_decoder (
 
 	assign read_start		= (ptype == DATAFRAME);
 	assign read_address		= i_opts;
-	assign read_size		= (ptype == DATAFRAME) ? ({24'h0,dsize}+1) << 5 : 32'h0;
+	assign read_size		= (ptype == DATAFRAME) ? 
+								((dsize == 0) ? 32'd4 : ({24'h0, dsize} + 1) << 5)
+						        : 32'd0;
 
 	assign dst_mac	=	i_mac;
 	assign ptype	=	i_ops == 4'h1 ? DATAFRAME :
