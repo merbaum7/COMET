@@ -170,7 +170,7 @@ module instruction_controller #(
 	wire	[31:0]	w_recv_i_opts;
 	
 	assign	w_recv_i_ops	=	(w_ops == 4'h2) ? 4'h1 :	// DATAREQ -> DATAFRAME
-								(w_ops == 4'h3) ? 4'h1 :	// REGREQ -> DATAFRAME
+	
 								4'h0;
 	assign	w_recv_i_mac	=	w_mac;
 	assign	w_recv_i_port	=	w_port;

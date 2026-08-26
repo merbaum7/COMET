@@ -161,7 +161,7 @@ module AXI2send #(
 		.mii_tx_c		(mii_tx_c),
 
 		.hw_wait		(hw_wait),
-		.force_send		(w_buf_ops == 4'h2 || w_buf_ops == 4'h3),
+		.force_send		(w_buf_ops == 4'h1),
 
 		// Data IF(FIFO)
 		.buf_clk		(M_ACLK),
