@@ -40,9 +40,7 @@ module instruction_controller #(
 		ops:
 			0x1: DATAFRAME
 			0x2: DATAREQ
-			0x3: REGREQ
 	
-		REGREQ	->	DATAFRAME (size == 0)
 		DATAREQ	->	DATAFRAME (size >= 0)
 		Read Address: opts
 	*/
@@ -148,18 +146,6 @@ module instruction_controller #(
 			endcase
 		end
 	end
-
-
-	// assign send_ops		=	(w_ops == 4'h2) ? 4'h1 :	// DATAREQ -> DATAFRAME
-	// 						(w_ops == 4'h3) ? 4'h1 :	// REGREQ -> DATAFRAME
-	// 						4'h0;
-	// assign send_mac		=	w_mac;
-	// assign send_port	=	w_port;
-	// assign send_size	=	(send_ops == 4'h1) ? w_size : 8'h0;
-	// assign send_daddr	=	w_opts;
-	// assign send_opts	=	w_daddr;
-
-	// assign inst_store	=	!send_full && !empty_ops;
 	
 	// Receive Instruction Decoder
 	wire	[3:0]	w_recv_i_ops;
@@ -197,14 +183,12 @@ module instruction_controller #(
 							(r_state == INPUT)	?	
 								(i_ops == 4'h1)		?	i_axi_dstaddr	:
 								(i_ops == 4'h2)		?	i_axi_srcaddr	:
-								(i_ops == 4'h3)		?	i_axi_srcaddr	:
 								32'h0	:
 							32'b0;
 	assign	send_opts	=	(r_state == RECV)	?	w_recv_i_opts	: 
 							(r_state == INPUT)	?	
 								(i_ops == 4'h1)		?	i_axi_srcaddr	:
 								(i_ops == 4'h2)		?	i_axi_dstaddr	:
-								(i_ops == 4'h3)		?	i_axi_dstaddr	:
 								32'h0	:
 							32'b0;
 
