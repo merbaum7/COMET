@@ -35,8 +35,12 @@ module fifo_Width_Converter #(
 				end	else begin
 					if(i_wen) begin
 						r_icount					<=	(r_icount == (OWIDTH/IWIDTH-1+DL)) ? 0 : r_icount + 1;
-						r_wdata						<=	{((r_icount == 0) ? {(OWIDTH-IWIDTH){1'b0}} : r_wdata), i_wdata};
 						r_wen						<=	r_icount == (OWIDTH/IWIDTH-1+DL);
+						if (r_icount == 0) begin
+							r_wdata							<=	{{(OWIDTH-IWIDTH){1'b0}}, i_wdata};
+						end else begin
+							r_wdata[r_icount*IWIDTH+:IWIDTH]<=	i_wdata;
+						end
 					end else begin
 						r_icount					<=	(r_icount == (OWIDTH/IWIDTH-1+DL)) ? 0 : r_icount;
 						if (reject) begin
@@ -85,7 +89,7 @@ module fifo_Width_Converter #(
 						r_tmpwdata		<=	i_wdata;
 						r_wdata			<=	i_wdata[0+:OWIDTH];
 						r_wen			<=	1;
-					end				
+					end
 				end
 			end
 
