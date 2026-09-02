@@ -58,12 +58,15 @@ module fifo_Width_Converter #(
 			assign	o_busy	=	0;
 
 		end else begin : oli
-			//parameter	CWWIDTH	=	$clog2(IWIDTH/OWIDTH);
+			localparam integer ORATIO = IWIDTH/OWIDTH;
+			localparam integer OCWIDTH = (ORATIO <= 1) ? 1 : $clog2(ORATIO);
 
-			reg	[$clog2(IWIDTH/OWIDTH):0]		r_ocount;
+			reg	[OCWIDTH-1:0]	r_ocount;
 			reg	[OWIDTH-1:0]	r_wdata;
 			reg	[IWIDTH-1:0]	r_tmpwdata;
 			reg					r_wen;
+			wire				w_last = (r_ocount == ORATIO-1);
+			
 			always @(posedge clk or posedge rst) begin
 				if (rst) begin
 					r_ocount		<=	0;
@@ -76,16 +79,24 @@ module fifo_Width_Converter #(
 							r_wen			<=	r_wen;
 							r_ocount		<=	r_ocount;
 							r_wdata			<=	r_wdata;
-						end else if (r_ocount == IWIDTH/OWIDTH) begin
-							r_wen			<=	0;
-							r_ocount		<=	0;
-							r_wdata			<=	0;
+						end else if (w_last) begin
+							if (i_wen) begin
+								// Seamlessly continue with the next input word.
+								r_ocount	<=	0;
+								r_tmpwdata	<=	i_wdata;
+								r_wdata		<=	i_wdata[0+:OWIDTH];
+								r_wen		<=	1;
+							end else begin
+								r_wen		<=	0;
+								r_ocount	<=	0;
+								r_wdata		<=	0;
+							end
 						end else begin
 							r_ocount		<=	r_ocount + 1;
-							r_wdata			<=	r_tmpwdata[r_ocount*OWIDTH+:OWIDTH];
+							r_wdata			<=	r_tmpwdata[(r_ocount+1)*OWIDTH+:OWIDTH];
 						end
 					end else if(i_wen) begin
-						r_ocount		<=	1;
+						r_ocount		<=	0;
 						r_tmpwdata		<=	i_wdata;
 						r_wdata			<=	i_wdata[0+:OWIDTH];
 						r_wen			<=	1;
@@ -95,7 +106,7 @@ module fifo_Width_Converter #(
 
 			assign	o_wdata	=	(stop) ? 0 : r_wdata;
 			assign	o_wen	=	(stop) ? 1'b0 : r_wen;
-			assign	o_busy	=	r_wen;
+			assign	o_busy	=	r_wen && (stop || !w_last);
 		end
 
 	endgenerate
