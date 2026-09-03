@@ -360,4 +360,5 @@ You can find the releases in https://github.com/merbaum7/COMET
 - 0.99.6 (Aug.25, 2026): Fixed AXI read/write size (in header decoding).  
 - 0.99.7 (Aug.25, 2026): Re-defined using ether type.  
 - 0.99.8 (Sep.02, 2026): Fixed Width converter sequence timing.  
+- 0.99.9 (Sep.03, 2026): Fixed AXI2send able to continuous instruction execution.  
 

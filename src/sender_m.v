@@ -17,6 +17,7 @@ module send_decoder (
 	output				read_start,
 	output	[31:0]		read_address,
 	output	[31:0]		read_size,
+	input				read_done,
 
 	// to phy module (parameters)
 	output	[47:0]		dst_mac,
@@ -29,7 +30,7 @@ module send_decoder (
 	parameter	REQ		=	16'h88B5,
 				DATA	=	16'h88B6;
 
-	assign read_start		= (ptype == DATA);
+	assign read_start		= (ptype == DATA) && !read_done;
 	assign read_address		= i_opts;
 	assign read_size		= (ptype == DATA) ? 
 								((dsize == 0) ? 32'd4 : ({24'h0, dsize} + 1) << 5)
@@ -139,6 +140,7 @@ module AXI2send #(
 	wire						w_rstart;
 	wire	[31:0]				w_addr;
 	wire	[31:0]				w_size;
+	wire						w_read_done;
 
 	wire	[3:0]				w_buf_ops;
 	wire	[47:0]				w_buf_mac;
@@ -178,7 +180,7 @@ module AXI2send #(
 		.opts			(w_opts),
 
 		.head_end		(w_inst_done),
-		.send_done		()
+		.send_done		(w_read_done)
 	);
 	
 	assign	w_src_mac	= own_mac;
@@ -261,7 +263,8 @@ module AXI2send #(
 
 		.read_start			(w_rstart),
 		.read_address		(w_addr),
-		.read_size			(w_size)
+		.read_size			(w_size),
+		.read_done			(w_read_done)
 	);
 
 	axi_m_read #(
