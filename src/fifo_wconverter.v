@@ -65,7 +65,7 @@ module fifo_Width_Converter #(
 			assign o_wen   = r_wvalid;
 			assign o_busy  = 1'b0;
 
-		end else begin : oli
+		end else if (OWIDTH < IWIDTH)begin : oli
 			localparam integer ORATIO = IWIDTH/OWIDTH;
 			localparam integer OCWIDTH = (ORATIO <= 1) ? 1 : $clog2(ORATIO);
 
@@ -115,6 +115,11 @@ module fifo_Width_Converter #(
 			assign	o_wdata	=	(stop) ? 0 : r_wdata;
 			assign	o_wen	=	(stop) ? 1'b0 : r_wen;
 			assign	o_busy	=	r_wen && (stop || !w_last);
+
+		end else if (OWIDTH == IWIDTH) begin : oei
+			assign	o_wdata	=	i_wdata;
+			assign	o_wen	=	i_wen && !stop && !reject;
+			assign	o_busy	=	stop;
 		end
 
 	endgenerate

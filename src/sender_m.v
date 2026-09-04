@@ -155,7 +155,8 @@ module AXI2send #(
 		.MII_TYPE		(MII_TYPE),
 		.MII_BUFLEN		(16),
 
-		.PARAM_REG		(1)
+		.PARAM_REG		(1),
+		.BUF_WIDTH		(AXIDATA_WIDTH)
 	) inst_phy (
 		.clk			(mii_clk),
 		.rst			(rst),

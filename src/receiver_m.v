@@ -163,7 +163,8 @@ module receive2AXI #(
 	
 	recv_mii #(
 		.MII_TYPE			(MII_TYPE),
-		.NMATCH_DENY		(1)
+		.NMATCH_DENY		(1),
+		.BUF_WIDTH			(AXIDATA_WIDTH)
 	) inst_phy (
 		.clk				(mii_clk),
 		.rst				(rst),
