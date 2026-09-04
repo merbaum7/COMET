@@ -21,41 +21,49 @@ module fifo_Width_Converter #(
 );
 	generate
 		if (OWIDTH > IWIDTH) begin : ogi
-			//parameter	CWWIDTH	=	$clog2(OWIDTH/IWIDTH);
+			localparam integer IRATIO = OWIDTH / IWIDTH;
+			localparam integer ICWIDTH = (IRATIO <= 1) ? 1 : $clog2(IRATIO);
 
-			reg	[$clog2(OWIDTH/IWIDTH):0]		r_icount;
-			reg	[OWIDTH-1:0]	r_wdata;
-			reg					r_wen;
+			reg [ICWIDTH-1:0] r_icount;
+			reg [OWIDTH-1:0]  r_accum;
+			reg [OWIDTH-1:0]  r_wdata;
+			reg               r_wvalid;
 
 			always @(posedge clk) begin
 				if (rst) begin
-					r_icount		<=	0;
-					r_wdata			<=	0;
-					r_wen			<=	0;
-				end	else begin
-					if(i_wen) begin
-						r_icount					<=	(r_icount == (OWIDTH/IWIDTH-1+DL)) ? 0 : r_icount + 1;
-						r_wen						<=	r_icount == (OWIDTH/IWIDTH-1+DL);
-						if (r_icount == 0) begin
-							r_wdata							<=	{{(OWIDTH-IWIDTH){1'b0}}, i_wdata};
+					r_icount	<= 0;
+					r_accum		<= 0;
+					r_wdata		<= 0;
+					r_wvalid	<= 1'b0;
+				end else begin
+					r_wvalid	<= 1'b0;
+
+					// rejectは未完成wordを破棄する
+					if (reject) begin
+						r_icount	<= 0;
+						r_accum		<= 0;
+						r_wvalid	<= 1'b0;
+					end else if (i_wen) begin
+						if (r_icount == IRATIO-1) begin
+							// 8->32の場合:
+							// {byte3, byte2, byte1, byte0}
+							r_wdata	<= {
+								i_wdata,
+								r_accum[OWIDTH-IWIDTH-1:0]
+							};
+							r_wvalid	<= 1'b1;
+							r_icount	<= 0;
 						end else begin
-							r_wdata[r_icount*IWIDTH+:IWIDTH]<=	i_wdata;
+							r_accum[r_icount*IWIDTH +: IWIDTH] <= i_wdata;
+							r_icount	<= r_icount + 1'b1;
 						end
-					end else begin
-						r_icount					<=	(r_icount == (OWIDTH/IWIDTH-1+DL)) ? 0 : r_icount;
-						if (reject) begin
-							r_wen						<=	1'b1;
-							r_icount					<=	0;
-						end else begin
-							r_wen						<=	r_icount == (OWIDTH/IWIDTH-1+DL);
-						end
-					end	
+					end
 				end
 			end
 
-			assign	o_wdata	=	r_wdata;
-			assign	o_wen	=	r_wen;
-			assign	o_busy	=	0;
+			assign o_wdata = r_wdata;
+			assign o_wen   = r_wvalid;
+			assign o_busy  = 1'b0;
 
 		end else begin : oli
 			localparam integer ORATIO = IWIDTH/OWIDTH;

@@ -140,7 +140,8 @@ module AXI2send #(
 	wire						w_rstart;
 	wire	[31:0]				w_addr;
 	wire	[31:0]				w_size;
-	wire						w_read_done;
+	
+	wire						w_frame_done;
 
 	wire	[3:0]				w_buf_ops;
 	wire	[47:0]				w_buf_mac;
@@ -180,15 +181,14 @@ module AXI2send #(
 		.opts			(w_opts),
 
 		.head_end		(w_inst_done),
-		.send_done		(w_read_done)
+		.send_done		(w_frame_done)
 	);
 	
 	assign	w_src_mac	= own_mac;
 
 	fifo_Width_Converter #(
 		.IWIDTH			(AXIDATA_WIDTH),
-		.OWIDTH			(MIIFIFO_WIDTH),
-		.DL				(MII_TYPE == "MII")
+		.OWIDTH			(MIIFIFO_WIDTH)
 	) inst_conv (
 		.clk			(M_ACLK),
 		.rst			(rst),
@@ -240,7 +240,7 @@ module AXI2send #(
 		.din_en			(inst_store),
 		.din			({inst_ops, inst_mac, inst_port, inst_size, inst_daddr, inst_opts}),
 
-		.dout_en		(w_inst_done),
+		.dout_en		(w_frame_done),
 		.dout			({w_buf_ops, w_buf_mac, w_buf_port, w_buf_size, w_buf_daddr, w_buf_opts})
 	);
 
@@ -264,7 +264,7 @@ module AXI2send #(
 		.read_start			(w_rstart),
 		.read_address		(w_addr),
 		.read_size			(w_size),
-		.read_done			(w_read_done)
+		.read_done			(w_frame_done)
 	);
 
 	axi_m_read #(
@@ -276,7 +276,7 @@ module AXI2send #(
 		.i_rstart			(w_rstart),
 		.i_start_address	(w_addr),
 		.i_read_size		(w_size),
-		.o_rdone			(),
+		.o_rdone			(w_read_done),
 
 		.i_fixed_burst		(1'b0),
 

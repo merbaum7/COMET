@@ -15,6 +15,7 @@ module receive_decoder (
 	output				write_start,
 	output	[31:0]		write_address,
 	output	[31:0]		write_size,
+	input				write_done,
 
 	// to sender module (parameters)
 	output	[3:0]		inst_ops,
@@ -29,7 +30,7 @@ module receive_decoder (
 				
 				FLOWCTRL	=	16'h8808;
 
-	assign write_start		= (ptype == DATA);
+	assign write_start		= (ptype == DATA) && !write_done;
 	assign write_address	= daddr;
 	assign write_size		= (ptype == DATA) ? 
 								((dsize == 0) ? 32'd4 : ({24'h0, dsize} + 1) << 5)
@@ -199,8 +200,7 @@ module receive2AXI #(
 
 	fifo_Width_Converter #(
 		.IWIDTH			(MIIFIFO_WIDTH),
-		.OWIDTH			(AXIDATA_WIDTH),
-		.DL				(MII_TYPE == "MII")
+		.OWIDTH			(AXIDATA_WIDTH)
 	) inst_conv (
 		.clk			(mii_clk),
 		.rst			(rst),
